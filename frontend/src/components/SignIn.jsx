@@ -1,10 +1,11 @@
 import React from "react";
 import { signInWithGoogle } from "../Firebase";
 import { useState } from "react";
+import formValidate from "../hooks/formValidation";
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const loginSuccess = () => {};
+  const { handleChange, errors, formData } = formValidate(loginSuccess);
   const signIn = () => {
     signInWithGoogle();
   };
@@ -18,14 +19,13 @@ const SignIn = () => {
             </label>
             <input
               type="text"
-              name="name"
+              name="email"
               placeholder="Enter your email address"
               autoComplete="off"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              onChange={handleChange}
               class="block w-full px-3 box-border py-2 placeholder-gray-400 border rounded-md shadow-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2  sm:text-sm bg-zinc-900 border-gray-700 text-gray-100"
             />
+            {errors.email && <h3 className="text-rose-600">{errors.email}</h3>}
           </div>
           <div className="mt-4">
             <label for="Name" className="block mb-2 text-sm font-medium">
@@ -33,14 +33,15 @@ const SignIn = () => {
             </label>
             <input
               type="text"
-              name="name"
+              name="password"
               placeholder="Enter a new password"
               autoComplete="off"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              onChange={handleChange}
               class="block w-full px-3 box-border py-2 placeholder-gray-400 border rounded-md shadow-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2  sm:text-sm bg-zinc-900 border-gray-700 text-gray-100"
             />
+            {errors.password && (
+              <h3 className="text-rose-600">{errors.password}</h3>
+            )}
           </div>
           <div className="my-6">
             <button
