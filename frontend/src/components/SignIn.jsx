@@ -1,14 +1,32 @@
 import React from "react";
-import { signInWithGoogle } from "../Firebase";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import formValidate from "../hooks/formValidation";
+import { useSelector, useDispatch } from "react-redux";
+import { signInWithGoogle } from "../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const loginSuccess = () => {};
   const { handleChange, errors, formData } = formValidate(loginSuccess);
   const signIn = () => {
-    signInWithGoogle();
+    dispatch(signInWithGoogle());
   };
+
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.auth
+  );
+  const navigate = useNavigate();
+  useEffect(() => {
+    //redirct when logged in
+    if (user || isSuccess) {
+      navigate("/dashboard");
+    }
+    // dispatch(reset());
+  }, [isError, isSuccess, user, message, navigate, dispatch]);
+
   return (
     <div className="flex flex-col mx-20 p-4 text-white rounded border border-gray-700 my-20">
       <div className="mt-4">

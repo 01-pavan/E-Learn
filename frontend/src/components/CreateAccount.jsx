@@ -1,46 +1,40 @@
 import React from "react";
-import { signInWithGoogle, auth } from "../Firebase";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import formValidate from "../hooks/formValidation";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useSelector, useDispatch } from "react-redux";
+import { createAccount } from "../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const CreateAccount = () => {
-  // const [name, setName] = useState("");
-  // const [username, setUserName] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
   const loginSuccess = () => {
-    createAccount();
+    dispatch(createAccount(formData));
     console.log("success");
   };
-
   const { handleChange, errors, formData, handleSubmit } =
     formValidate(loginSuccess);
   console.log(formData);
-  const signIn = () => {
-    signInWithGoogle();
-  };
 
-  const createAccount = async () => {
-    try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
-      user.displayName = formData.name;
-      console.log(user);
-    } catch (error) {
-      console.log(error.message);
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.auth
+  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    //redirct when logged in
+    if (user || isSuccess) {
+      navigate("/dashboard");
     }
-  };
+    // dispatch(reset());
+  }, [isError, isSuccess, user, message, navigate, dispatch]);
 
   return (
     <div className="flex flex-col mx-20 p-4 text-white rounded border border-gray-700 my-20">
       <div className="">
         <p className="text-sm font-medium text-gray-200 mb-2">Sign up with</p>
         <button
-          onClick={signIn}
+          // onClick={signIn}
           className="disabled:opacity-50 flex-1 disabled:cursor-wait w-full cursor-pointer inline-flex justify-center py-2 px-4 border rounded-md shadow-sm bg-zinc-900 border-gray-700 text-gray-300 hover:bg-gray-700 text-sm font-medium"
         >
           google
