@@ -64,7 +64,7 @@ const DashBoard = () => {
                 Latest Courses
               </h1>
               <div className="flex flex-wrap gap-4">
-                <div className="bg-zinc-500 w-60 h-72">
+                <div className="bg-zinc-500 w-72 h-72">
                   <div className="bg-yellow-500 h-36"></div>
                 </div>
                 <div className="bg-zinc-500 w-60 h-72">
