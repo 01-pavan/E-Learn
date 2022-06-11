@@ -16,9 +16,15 @@ const getCourses = async () => {
   return response.data;
 };
 
+//get  course
+const getCourse = async (courseId) => {
+  const response = await axios.get(API_URL + courseId);
+  return response.data;
+};
 const courseService = {
   createCourse,
   getCourses,
+  getCourse,
 };
 
 export default courseService;

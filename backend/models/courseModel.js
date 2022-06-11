@@ -1,15 +1,19 @@
 const mongoose = require("mongoose");
 
-const sectionInfoSchema = mongoose.Schema({
-  videoName: String,
-  videLink: String,
-});
-const courseContentSchema = mongoose.Schema({
-  sectionName: String,
-  sectionInfo: [sectionInfoSchema],
-});
+// const sectionInfoSchema = new mongoose.Schema({
+//   videoName: {
+//     type: String,
+//   },
+//   videLink: {
+//     type: String,
+//   },
+// });
 
-const courseSchema = mongoose.Schema(
+// const CourseContentSchema = new mongoose.Schema({
+//   sectionInfo: [{ type: mongoose.Schema.Types.ObjectId, ref: "Info" }],
+// });
+
+const courseSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -22,14 +26,26 @@ const courseSchema = mongoose.Schema(
     price: {
       type: Number,
     },
+    author: {
+      type: String,
+    },
     thumbNailUrl: {
       type: String,
     },
-    courseContent: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Course",
-    },
+    courseContent: [
+      {
+        sectionName: {
+          type: String,
+          required: [true, "Please add a name"],
+        },
+        sectionInfo: [
+          {
+            type: mongoose.Schema.Types.Mixed,
+            ref: "Info",
+          },
+        ],
+      },
+    ],
   },
   {
     timestamps: true,
