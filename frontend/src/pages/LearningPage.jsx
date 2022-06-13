@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Header from "../components/Header";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
+import axios from "axios";
+
+const API_URL = "http://localhost:5000/api/comments/";
 
 const LearningPage = () => {
   const { course } = useSelector((state) => state.course);
   const { user } = useSelector((state) => state.auth);
   const [videoUrl, setVideoUrl] = useState("");
   const [hide, sethide] = useState(false);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
 
   const videoLink = course.courseContent[0].sectionInfo[0].videoLink;
   let avatar = user.displayName[0].toUpperCase();
@@ -19,6 +24,38 @@ const LearningPage = () => {
     num++;
     return num;
   };
+
+  const postComment = async () => {
+    const commentData = {
+      courseId: course._id,
+      userName: user.displayName,
+      comment,
+    };
+
+    const response = await axios.post(API_URL, commentData);
+    console.log(response);
+  };
+
+  useEffect(() => {
+    let config = {
+      method: "get",
+      url: API_URL,
+      headers: { "Content-Type": "application/json" },
+      params: {
+        course_id: course._id,
+      },
+    };
+
+    const fetchComments = async () => {
+      const res = await axios.get(API_URL, config);
+
+      setComments(res.data);
+    };
+    fetchComments();
+  }, [course._id, postComment]);
+
+  console.log("comments", comments);
+
   return (
     <>
       <Header title={course.title} />
@@ -57,7 +94,7 @@ const LearningPage = () => {
               <span className="text-lg font-semibold">{course.author}</span>
             </h1>
           </div>
-          <div className=" mx-8 my-6 flex flex-col ">
+          <div className=" mx-8 my-4 flex flex-col ">
             <div className="flex w-full">
               <div className="w-12 h-12 bg-zinc-600 rounded-full flex justify-center items-center">
                 {user.photoURL ? (
@@ -76,13 +113,30 @@ const LearningPage = () => {
                 type="text"
                 placeholder={`Commenting as ${user.displayName}`}
                 className="outline-none border-b-2  border-zinc-600 ml-4 text-xl w-full"
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
               />
             </div>
             <div className="flex justify-end mt-4">
-              <button className="rounded border-2 border-gray-500 shadow-sm py-2 px-4 font-semibold  disabled:opacity-50">
+              <button
+                className="rounded border-2 border-gray-500 shadow-sm py-2 px-4 font-semibold  disabled:opacity-50"
+                onClick={postComment}
+              >
                 Comment
               </button>
             </div>
+          </div>
+          <div className=" mx-8 space-y-6 mb-8">
+            {[...comments].reverse().map((comment, index) => (
+              <div className="flex">
+                <div className="w-12 h-12 bg-zinc-600 rounded-full flex justify-center items-center"></div>
+                <div className="flex flex-col ml-2">
+                  <h2 className="text-md font-bold">{comment.userName}</h2>
+                  <p>{comment.comment}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         <div

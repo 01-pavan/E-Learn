@@ -37,8 +37,8 @@ const LandingPage = () => {
           </div>
         </div>
         <div className="basis-6/12 ">
-          <SignIn />
-          {/* <CreateAccount /> */}
+          {/* <SignIn /> */}
+          <CreateAccount />
         </div>
       </div>
     </div>
