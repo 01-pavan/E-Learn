@@ -31,7 +31,7 @@ const CourseDetailsPage = () => {
   return (
     <>
       <Header />
-      <div className="w-full mx-auto">
+      <div className="w-full mx-auto scrollbar-hide">
         <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900">
           <div className="flex max-w-6xl px-5 w-full mx-auto pt-4">
             <div className="flex-grow text-white relative">
@@ -48,8 +48,12 @@ const CourseDetailsPage = () => {
                 </p>
               </div>
               <div className="absolute top-0 right-0 w-96  shadow-2xl	">
-                <div className="w-full h-56 ">
-                  <img className="h-full" src={course?.thumbNailUrl} alt="" />
+                <div className="w-full">
+                  <img
+                    className="h-[260px]"
+                    src={course?.thumbNailUrl}
+                    alt=""
+                  />
                 </div>
                 <div className="p-6 text-black">
                   <h1 className="text-3xl font-bold">
