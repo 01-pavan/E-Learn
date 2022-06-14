@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Header from "../components/Header";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -17,6 +17,8 @@ const LearningPage = () => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
 
+  const inputElement = useRef();
+
   const videoLink = course.courseContent[0].sectionInfo[0].videoLink;
   let avatar = user.displayName[0].toUpperCase();
   let num = 0;
@@ -26,6 +28,7 @@ const LearningPage = () => {
   };
 
   const postComment = async () => {
+    if (!comment) return;
     const commentData = {
       courseId: course._id,
       userName: user.displayName,
@@ -33,10 +36,13 @@ const LearningPage = () => {
     };
 
     const response = await axios.post(API_URL, commentData);
-    console.log(response);
+    console.log(inputElement.current.value);
+    inputElement.current.value = " ";
+    setComment("");
+    fetchComments();
   };
 
-  useEffect(() => {
+  const fetchComments = async () => {
     let config = {
       method: "get",
       url: API_URL,
@@ -45,14 +51,14 @@ const LearningPage = () => {
         course_id: course._id,
       },
     };
+    const res = await axios.get(API_URL, config);
 
-    const fetchComments = async () => {
-      const res = await axios.get(API_URL, config);
+    setComments(res.data);
+  };
 
-      setComments(res.data);
-    };
+  useEffect(() => {
     fetchComments();
-  }, [course._id, postComment]);
+  }, []);
 
   console.log("comments", comments);
 
@@ -112,6 +118,7 @@ const LearningPage = () => {
               <input
                 type="text"
                 placeholder={`Commenting as ${user.displayName}`}
+                ref={inputElement}
                 className="outline-none border-b-2  border-zinc-600 ml-4 text-xl w-full"
                 onChange={(e) => {
                   setComment(e.target.value);
