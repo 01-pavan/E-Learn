@@ -20,4 +20,6 @@ app.get("/", (req, res) => {
 //Routes
 app.use("/api/courses", require("./routes/courseRoute"));
 app.use("/api/comments", require("./routes/commentRoute"));
+app.use("/api/enrolledCourses", require("./routes/enrolledRoute"));
+
 app.listen(PORT, () => console.log(`server started on port ${PORT} 🎉🎉`));

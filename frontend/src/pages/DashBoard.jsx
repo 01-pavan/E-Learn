@@ -2,12 +2,15 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getCourses, reset } from "../features/courses/courseSlice";
 import { useNavigate, Link } from "react-router-dom";
+import { getEnrolledCourses } from "../features/enrolledCourses/enrolledCourseSlice";
 
 const DashBoard = () => {
   const { courses, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.course
   );
   const { user } = useSelector((state) => state.auth);
+
+  const { enrolledCourses } = useSelector((state) => state.enrolledCourse);
 
   let avatar = user.displayName[0].toUpperCase();
   useEffect(() => {
@@ -22,10 +25,15 @@ const DashBoard = () => {
   //     }
   //   };
   // }, [dispatch, isSuccess]);
+  console.log(enrolledCourses);
 
   useEffect(() => {
     dispatch(getCourses());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getEnrolledCourses(user.uid));
+  }, []);
 
   const navigate = useNavigate();
 
@@ -74,28 +82,29 @@ const DashBoard = () => {
                 Good Evening, {user.displayName}
               </h1>
             </div>
-            {/* <div className="rounded-lg shadow-xl rounded-lg p-4 my-6">
+            <div className="rounded-lg shadow-xl rounded-lg p-4 my-6">
               <h1 className="text-2xl font-semibold text-zinc-600 mb-4">
                 Enrolled courses
               </h1>
-              <div className=" flex flex-wrap gap-4">
-                <div className="bg-zinc-500 w-60 h-72">
-                  <div className="bg-yellow-500 h-36"></div>
-                </div>
-                <div className="bg-zinc-500 w-60 h-72">
-                  <div className="bg-yellow-500 h-36"></div>
-                </div>
-                <div className="bg-zinc-500 w-60 h-72">
-                  <div className="bg-yellow-500 h-36"></div>
-                </div>
-                <div className="bg-zinc-500 w-60 h-72">
-                  <div className="bg-yellow-500 h-36"></div>
-                </div>
-                <div className="bg-zinc-500 w-60 h-72">
-                  <div className="bg-yellow-500 h-36"></div>
-                </div>
+              <div className="flex flex-wrap gap-4">
+                {enrolledCourses.map((item, index) => (
+                  <Link to={`/course/${item.course._id}`}>
+                    <div className=" w-72 h-74 hover:shadow-2xl p-2 cursor-pointer">
+                      <div className=" h-34">
+                        <img src={item.course.thumbNailUrl} alt="thumb" />
+                      </div>
+                      <div className="text-black pt-2">
+                        <h1 className="text-lg font-bold">
+                          {item.course.title}
+                        </h1>
+                        <h2 className="text-md ">{item.course.author}</h2>
+                        <h2 className="font-bold">₹{item.course.price}</h2>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            </div> */}
+            </div>
             <div className="rounded-lg shadow-xl rounded-lg p-4 my-6">
               <h1 className="text-2xl font-semibold text-black mb-4">
                 Latest Courses
@@ -115,19 +124,6 @@ const DashBoard = () => {
                     </div>
                   </Link>
                 ))}
-
-                {/* <div className="bg-zinc-500 w-60 h-72">
-                  <div className="bg-yellow-500 h-36"></div>
-                </div>
-                <div className="bg-zinc-500 w-60 h-72">
-                  <div className="bg-yellow-500 h-36"></div>
-                </div>
-                <div className="bg-zinc-500 w-60 h-72">
-                  <div className="bg-yellow-500 h-36"></div>
-                </div>
-                <div className="bg-zinc-500 w-60 h-72">
-                  <div className="bg-yellow-500 h-36"></div>
-                </div> */}
               </div>
             </div>
           </main>

@@ -17,7 +17,7 @@ const getComments = asyncHandler(async (req, res) => {
   const { course_id } = req.query;
 
   const comments = await Comment.find({ courseId: course_id });
-  console.log(course_id);
+
   res.status(200).json(comments);
 });
 

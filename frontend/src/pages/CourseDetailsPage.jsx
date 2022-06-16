@@ -4,11 +4,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { getCourse, reset } from "../features/courses/courseSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { createEnrolledCourse } from "../features/enrolledCourses/enrolledCourseSlice";
 
 const CourseDetailsPage = () => {
   const { course, isLoading, message, isError, isSuccess } = useSelector(
     (state) => state.course
   );
+  const { user } = useSelector((state) => state.auth);
+
+  const { enrolledCourses } = useSelector((state) => state.enrolledCourse);
+
+  console.log(enrolledCourses, "enrolled courses");
 
   const params = useParams();
   const dispatch = useDispatch();
@@ -28,6 +34,16 @@ const CourseDetailsPage = () => {
   }
 
   console.log(courseId);
+  const postEnrolledCourse = () => {
+    console.log("clicked");
+    const enrolledCourseData = {
+      userId: user.uid,
+      course: course,
+      progress: 0,
+    };
+    dispatch(createEnrolledCourse(enrolledCourseData));
+  };
+
   return (
     <>
       <Header />
@@ -64,7 +80,8 @@ const CourseDetailsPage = () => {
                   </h1>
                   <button
                     onClick={() => {
-                      navigate("/learn");
+                      postEnrolledCourse();
+                      // navigate("/learn");
                     }}
                     type="submit"
                     // disabled

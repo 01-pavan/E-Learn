@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import courseService from "./courseService";
 
