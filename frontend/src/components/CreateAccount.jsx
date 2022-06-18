@@ -2,10 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import formValidate from "../hooks/formValidation";
 import { useSelector, useDispatch } from "react-redux";
+import { signInWithGoogle } from "../features/auth/authSlice";
 import { createAccount } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import GoogleIcon from "@mui/icons-material/Google";
 
-const CreateAccount = () => {
+const CreateAccount = ({ toggleFn }) => {
   const loginSuccess = () => {
     dispatch(createAccount(formData));
     console.log("success");
@@ -15,7 +17,9 @@ const CreateAccount = () => {
   console.log(formData);
 
   const dispatch = useDispatch();
-
+  const signIn = () => {
+    dispatch(signInWithGoogle());
+  };
   const { user, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.auth
   );
@@ -29,15 +33,19 @@ const CreateAccount = () => {
     // dispatch(reset());
   }, [isError, isSuccess, user, message, navigate, dispatch]);
 
+  const handleClick = () => {
+    toggleFn((prev) => !prev);
+  };
+
   return (
     <div className="flex flex-col mx-20 p-4 text-white rounded border border-gray-700 my-20">
       <div className="">
         <p className="text-sm font-medium text-gray-200 mb-2">Sign up with</p>
         <button
-          // onClick={signIn}
+          onClick={signIn}
           className="disabled:opacity-50 flex-1 disabled:cursor-wait w-full cursor-pointer inline-flex justify-center py-2 px-4 border rounded-md shadow-sm bg-zinc-900 border-gray-700 text-gray-300 hover:bg-gray-700 text-sm font-medium"
         >
-          google
+          <GoogleIcon />
         </button>
       </div>
       <div className="mt-4">
@@ -46,7 +54,7 @@ const CreateAccount = () => {
         </p>
         <form action="" className="text-gray-200" onSubmit={handleSubmit}>
           <div className="mt-4">
-            <label for="Name" className="block mb-2 text-sm font-medium">
+            <label htmlFor="Name" className="block mb-2 text-sm font-medium">
               Name
             </label>
             <input
@@ -55,12 +63,12 @@ const CreateAccount = () => {
               placeholder="Enter your name"
               autoComplete="off"
               onChange={handleChange}
-              class="block w-full px-3 box-border py-2 placeholder-gray-400 border rounded-md shadow-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2  sm:text-sm bg-zinc-900 border-gray-700 text-gray-100"
+              className="block w-full px-3 box-border py-2 placeholder-gray-400 border rounded-md shadow-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2  sm:text-sm bg-zinc-900 border-gray-700 text-gray-100"
             />
             {errors.name && <h3 className="text-rose-800">{errors.name}</h3>}
           </div>
           <div className="mt-4">
-            <label for="Name" className="block mb-2 text-sm font-medium">
+            <label htmlFor="Name" className="block mb-2 text-sm font-medium">
               Username
             </label>
             <input
@@ -76,7 +84,7 @@ const CreateAccount = () => {
             )}
           </div>
           <div className="mt-4">
-            <label for="Name" className="block mb-2 text-sm font-medium">
+            <label htmlFor="Name" className="block mb-2 text-sm font-medium">
               Email
             </label>
             <input
@@ -90,7 +98,7 @@ const CreateAccount = () => {
             {errors.email && <h3 className="text-rose-800">{errors.email}</h3>}
           </div>
           <div className="mt-4">
-            <label for="Name" className="block mb-2 text-sm font-medium">
+            <label htmlFor="Name" className="block mb-2 text-sm font-medium">
               Password
             </label>
             <input
@@ -116,6 +124,15 @@ const CreateAccount = () => {
           </div>
         </form>
       </div>
+      <p>
+        Already have an account?{" "}
+        <span
+          onClick={handleClick}
+          className="cursor-pointer hover:text-indigo-600 underline"
+        >
+          Sign In
+        </span>
+      </p>
     </div>
   );
 };

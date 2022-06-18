@@ -60,7 +60,7 @@ const LearningPage = () => {
     fetchComments();
   }, []);
 
-  console.log("comments", comments);
+  // console.log("comments", comments);
 
   return (
     <>
@@ -75,9 +75,9 @@ const LearningPage = () => {
                   ? videoUrl
                   : `${course?.courseContent[0].sectionInfo[0].videoLink}`
               }
-              frameborder="0"
+              frameBorder="0"
               allow="autoplay; encrypted-media"
-              allowfullscreen
+              allowFullScreen
               title="video"
             />
             {hide && (
@@ -136,7 +136,7 @@ const LearningPage = () => {
           </div>
           <div className=" mx-8 space-y-6 mb-8">
             {[...comments].reverse().map((comment, index) => (
-              <div className="flex">
+              <div className="flex" key={index}>
                 <div className="w-12 h-12 bg-zinc-600 rounded-full flex justify-center items-center"></div>
                 <div className="flex flex-col ml-2">
                   <h2 className="text-md font-bold">{comment.userName}</h2>

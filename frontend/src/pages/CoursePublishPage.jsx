@@ -5,6 +5,7 @@ import { Image } from "cloudinary-react";
 import Modal from "../components/Modal";
 import { reset, createCourse } from "../features/courses/courseSlice";
 import { useNavigate } from "react-router-dom";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 const CoursePublishPage = () => {
   const { isLoading, isError, isSuccess, message } = useSelector(
@@ -16,7 +17,7 @@ const CoursePublishPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log("issuccess from publish", isSuccess);
+    // console.log("issuccess from publish", isSuccess);
     if (isSuccess === true) {
       dispatch(reset());
       navigate("/dashboard");
@@ -40,11 +41,6 @@ const CoursePublishPage = () => {
   //   (state) => state.auth
   // );
 
-  //   let avatar = user.displayName[0].toUpperCase();
-  //   useEffect(() => {
-  //     const profilePic = user.photoURL;
-  //   }, []);
-
   const uploadImg = () => {
     const formData = new FormData();
     formData.append("file", imgSelected);
@@ -62,27 +58,25 @@ const CoursePublishPage = () => {
     setIndex(index);
     setShowSelected(true);
     setSelectedSection(e.target.innerText);
-    console.log(e.target.innerText);
+    // console.log(e.target.innerText);
   };
 
-  console.log("section array", courseContent);
-  console.log("index", index);
+  // console.log("section array", courseContent);
+  // console.log("index", index);
 
   const onSubmit = () => {
-    dispatch(
-      createCourse({
-        title,
-        description,
-        price,
-        thumbNailUrl,
-        author,
-        courseContent,
-      })
-    );
-
-    console.log("submit clicked");
+    // dispatch(
+    //   createCourse({
+    //     title,
+    //     description,
+    //     price,
+    //     thumbNailUrl,
+    //     author,
+    //     courseContent,
+    //   })
+    // );
+    // console.log("submit clicked");
   };
-  console.log(thumbNailUrl, "phoyoyoyo");
 
   return (
     <>
@@ -116,7 +110,19 @@ const CoursePublishPage = () => {
       <div className="bg-gray-50 mt-4">
         <main className=" max-w-7xl mx-auto ">
           <div className="flex justify-between ">
-            <h1 className="text-2xl p-4 font-semibold">Course Details</h1>
+            <div className="flex space-x-4 items-center">
+              <div
+                onClick={() => {
+                  navigate("/dashboard");
+                }}
+              >
+                {" "}
+                <ArrowBackIosNewIcon className="cursor-pointer" />
+              </div>
+
+              <h1 className="text-2xl p-4 font-semibold">Course Details</h1>
+            </div>
+
             <button
               onClick={onSubmit}
               className="px-8  bg-indigo-600 rounded-md hover:bg-indigo-700 text-white text-xl font-semibold my-2 "
@@ -127,9 +133,10 @@ const CoursePublishPage = () => {
           <div className="flex flex-wrap">
             <div className="basis-2/6 p-8">
               <div className="flex flex-col items-center">
-                <div className="w-full h-60 bg-slate-700 ">
+                <div className="w-full relative h-60 bg-slate-700 ">
                   {!imgId ? (
                     <input
+                      className="absolute top-24 left-24"
                       type="file"
                       onChange={(e) => {
                         setImgSelected(e.target.files[0]);

@@ -4,6 +4,7 @@ const {
   getCourses,
   getCourse,
   createCourse,
+  updateCourse,
 } = require("../controllers/courseController");
 
 router.route("/").get(getCourses).post(createCourse);

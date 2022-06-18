@@ -1,9 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import courseService from "./courseService";
 
+//getting course from localstorage
+
+const course = JSON.parse(localStorage.getItem("course"));
+console.log(course, "from local storage");
+
 const initialState = {
   courses: [],
-  course: {},
+  course: course ? course : {},
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -40,7 +45,7 @@ export const getCourses = createAsyncThunk(
     }
   }
 );
-//get courses
+//get course
 
 export const getCourse = createAsyncThunk(
   "courses/get",

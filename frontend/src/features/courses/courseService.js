@@ -19,6 +19,10 @@ const getCourses = async () => {
 //get  course
 const getCourse = async (courseId) => {
   const response = await axios.get(API_URL + courseId);
+  if (response.data) {
+    localStorage.setItem("course", JSON.stringify(response.data));
+  }
+  console.log(response.data);
   return response.data;
 };
 const courseService = {

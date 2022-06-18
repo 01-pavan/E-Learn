@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { getCourses, reset } from "../features/courses/courseSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { getEnrolledCourses } from "../features/enrolledCourses/enrolledCourseSlice";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { logout, reset as rst } from "../features/auth/authSlice";
 
 const DashBoard = () => {
   const { courses, isLoading, isSuccess, isError, message } = useSelector(
@@ -13,9 +15,9 @@ const DashBoard = () => {
   const { enrolledCourses } = useSelector((state) => state.enrolledCourse);
 
   let avatar = user.displayName[0].toUpperCase();
-  useEffect(() => {
-    const profilePic = user.photoURL;
-  }, []);
+  // useEffect(() => {
+  //   const profilePic = user.photoURL;
+  // }, []);
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -25,7 +27,6 @@ const DashBoard = () => {
   //     }
   //   };
   // }, [dispatch, isSuccess]);
-  console.log(enrolledCourses);
 
   useEffect(() => {
     dispatch(getCourses());
@@ -42,23 +43,40 @@ const DashBoard = () => {
     navigate("/publish");
     console.log("publish clicked");
   };
-  console.log(courses, "from courses");
 
   if (isLoading) {
     return <h1>loadinggggg</h1>;
   }
+  const onLogout = () => {
+    dispatch(logout());
+    dispatch(rst());
+    window.location.href = "/";
+  };
+
+  const greet = () => {
+    var d = new Date();
+    var time = d.getHours();
+
+    if (time < 12) {
+      return "Good morning,";
+    }
+    if (time >= 12) {
+      return "Good afternoon,";
+    }
+    return "Welcome,";
+  };
 
   return (
     <>
       <header className="z-[51] relative cd-morph-dropdown  text-gray-900 !fixed left-0 right-0 bg-white shadow">
         <div className="relative py-2 max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 group">
           <h1 className="font-bold text-2xl mr-1">E-Learn</h1>
-          <div className="flex space-x-2">
+          <div className="flex space-x-4 items-center">
             <button
               onClick={handleRoute}
               className="px-2  bg-indigo-600 rounded-md hover:bg-indigo-700 text-white text-lg"
             >
-              Publish course
+              Teach with us
             </button>
             <div className="w-12 h-12 bg-zinc-600 rounded-full flex justify-center items-center">
               {user.photoURL ? (
@@ -71,6 +89,7 @@ const DashBoard = () => {
                 <h1 className="text-white text-2xl font-semibold">{avatar}</h1>
               )}
             </div>
+            <LogoutIcon style={{ fontSize: 35 }} onClick={onLogout} />
           </div>
         </div>
       </header>
@@ -79,17 +98,20 @@ const DashBoard = () => {
           <main className="w-full mt-4  px-22">
             <div className="bg-gradient-to-l from-gray-900 via-white to-white rounded-lg shadow rounded-lg p-6">
               <h1 className="text-4xl font-bold text-zinc-600">
-                Good Evening, {user.displayName}
+                {greet()} {user.displayName}.
               </h1>
             </div>
             <div className="rounded-lg shadow-xl rounded-lg p-4 my-6">
-              <h1 className="text-2xl font-semibold text-zinc-600 mb-4">
+              <h1 className="text-2xl font-semibold text-black mb-4">
                 Enrolled courses
               </h1>
               <div className="flex flex-wrap gap-4">
                 {enrolledCourses.map((item, index) => (
                   <Link to={`/course/${item.course._id}`}>
-                    <div className=" w-72 h-74 hover:shadow-2xl p-2 cursor-pointer">
+                    <div
+                      key={index}
+                      className=" w-72 h-74 hover:shadow-2xl p-2 cursor-pointer"
+                    >
                       <div className=" h-34">
                         <img src={item.course.thumbNailUrl} alt="thumb" />
                       </div>
@@ -98,7 +120,20 @@ const DashBoard = () => {
                           {item.course.title}
                         </h1>
                         <h2 className="text-md ">{item.course.author}</h2>
-                        <h2 className="font-bold">₹{item.course.price}</h2>
+                      </div>
+                      <div className="w-full bg-gray-200 h-1  my-2">
+                        <div
+                          className={`bg-blue-400 h-1 w-[${item.progress}%] ${
+                            item.progress === 0 ? "hidden" : "block"
+                          }`}
+                        ></div>
+                      </div>
+                      <div className="text-black">
+                        {item.progress === 0 ? (
+                          <span>Start Course</span>
+                        ) : (
+                          <span>{item.progress}% Complete</span>
+                        )}
                       </div>
                     </div>
                   </Link>
@@ -112,7 +147,10 @@ const DashBoard = () => {
               <div className="flex flex-wrap gap-4">
                 {courses.map((item, index) => (
                   <Link to={`/course/${item._id}`}>
-                    <div className=" w-72 h-74 hover:shadow-2xl p-2 cursor-pointer">
+                    <div
+                      key={index}
+                      className=" w-72 h-74 hover:shadow-2xl p-2 cursor-pointer"
+                    >
                       <div className=" h-34">
                         <img src={item.thumbNailUrl} alt="thumb" />
                       </div>

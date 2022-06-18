@@ -15,12 +15,13 @@ const CourseDetailsPage = () => {
   );
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [enrolledTimestamp, setIsEnrolledTimeStamp] = useState("");
+  const [fakeCourse, setFakeCourse] = useState({});
 
   const { user } = useSelector((state) => state.auth);
 
   const { enrolledCourses } = useSelector((state) => state.enrolledCourse);
 
-  console.log(enrolledCourses, "enrolled courses");
+  // console.log(enrolledCourses, "enrolled courses");
 
   const params = useParams();
   const dispatch = useDispatch();
@@ -33,9 +34,8 @@ const CourseDetailsPage = () => {
       if (item.course._id === courseId) {
         setIsEnrolled(true);
         setIsEnrolledTimeStamp(item.createdAt);
-        console.log("enrolled🎉🎉🎉");
+        setFakeCourse(item.course);
       }
-      console.log("not enrolled🤨🤨🤨🤨");
     });
   };
   useEffect(() => {
@@ -53,7 +53,6 @@ const CourseDetailsPage = () => {
   };
 
   useEffect(() => {
-    console.log("useeffect from course detai;s");
     dispatch(getCourse(courseId));
   }, [courseId]);
 
@@ -64,9 +63,8 @@ const CourseDetailsPage = () => {
     return <div>error</div>;
   }
 
-  console.log(courseId);
+  // console.log(courseId);
   const postEnrolledCourse = () => {
-    console.log("clicked");
     const enrolledCourseData = {
       userId: user.uid,
       course: course,
@@ -78,7 +76,7 @@ const CourseDetailsPage = () => {
   const checkout = async () => {
     const res = await axios.post("http://localhost:5000/api/payment");
 
-    console.log(res);
+    console.log(res, "✉️✉️✉️✉️");
   };
 
   return (
@@ -141,7 +139,8 @@ const CourseDetailsPage = () => {
                     <button
                       onClick={() => {
                         postEnrolledCourse();
-                        checkout();
+                        // checkout();
+                        navigate("/learn");
                       }}
                       type="submit"
                       // disabled

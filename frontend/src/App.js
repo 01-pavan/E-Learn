@@ -5,20 +5,24 @@ import CoursePublishPage from "./pages/CoursePublishPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CourseDetailsPage from "./pages/CourseDetailsPage";
 import LearningPage from "./pages/LearningPage";
+import PaymentPage from "./pages/PaymentPage";
 
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/dashboard" element={<DashBoard />} />
-          <Route path="publish" element={<CoursePublishPage />} />
-          <Route path="/course/:courseId" element={<CourseDetailsPage />} />
-          <Route path="/learn" element={<LearningPage />} />
+          <Route exact path="/" element={<LandingPage />} />
+          <Route exact path="/dashboard" element={<DashBoard />} />
+          <Route exact path="publish" element={<CoursePublishPage />} />
+          <Route
+            exact
+            path="/course/:courseId"
+            element={<CourseDetailsPage />}
+          />
+          <Route exact path="/learn" element={<LearningPage />} />
+          <Route exact path="/payment" element={<PaymentPage />} />
         </Routes>
-        {/* <Header />
-      <LandingPage /> */}
       </Router>
     </>
   );

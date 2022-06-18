@@ -1,9 +1,9 @@
-import { async } from "@firebase/util";
 // import axios from "axios";
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../Firebase";
 
@@ -26,12 +26,28 @@ const createAccount = async (userData) => {
   }
 };
 
+//sign in with email and password
+
+const signInWithEmailandPassword = async (userData) => {
+  console.log(userData);
+  try {
+    const { user } = await signInWithEmailAndPassword(
+      auth,
+      userData.email,
+      userData.password
+    );
+    console.log(user, "from service");
+    return user;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 //sign in google
 
 const signInWithGoogle = async () => {
   try {
     const { user } = await signInWithPopup(auth, provider);
-    console.log("sfbs", user);
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
     }
@@ -49,9 +65,18 @@ const signInWithGoogle = async () => {
   //   return user;
 };
 
+//LOGOUT USER
+
+const logout = () => {
+  localStorage.removeItem("user");
+  localStorage.removeItem("course");
+};
+
 const authService = {
   createAccount,
   signInWithGoogle,
+  logout,
+  signInWithEmailandPassword,
 };
 
 export default authService;

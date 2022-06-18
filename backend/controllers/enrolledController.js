@@ -19,7 +19,19 @@ const getEnrolledCourses = asyncHandler(async (req, res) => {
   res.status(200).json(enrolledCourses);
 });
 
+const updateEnrolledCourse = asyncHandler(async (req, res) => {
+  console.log(req.params.id);
+  console.log(req.body);
+  const updatedCourse = await EnrolledCourse.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+  res.status(201).json(updatedCourse);
+});
+
 module.exports = {
   createEnrolledCourse,
   getEnrolledCourses,
+  updateEnrolledCourse,
 };

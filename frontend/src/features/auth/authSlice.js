@@ -1,8 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authService";
 
+//get user from local storage
+
+const user = JSON.parse(localStorage.getItem("user"));
+
 const initialState = {
-  user: null,
+  user: user ? user : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -38,10 +42,37 @@ export const signInWithGoogle = createAsyncThunk(
   }
 );
 
+export const signInWithEmailandPassword = createAsyncThunk(
+  "auth/signInWithEmailandPassword",
+  async (user, thunkAPI) => {
+    try {
+      return await authService.signInWithEmailandPassword(user);
+    } catch (error) {
+      console.log("error in authslice");
+      const message = error.response;
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+//logout user
+
+export const logout = createAsyncThunk("auth/logout", async () => {
+  await authService.logout();
+});
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    reset: (state) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = false;
+      state.message = "";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createAccount.pending, (state) => {
@@ -65,9 +96,25 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.user = action.payload;
-        console.log("actionnnn", action.payload);
       })
       .addCase(signInWithGoogle.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.message = action.payload;
+        state.user = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+      })
+      .addCase(signInWithEmailandPassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(signInWithEmailandPassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(signInWithEmailandPassword.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
         state.message = action.payload;
@@ -76,4 +123,5 @@ export const authSlice = createSlice({
   },
 });
 
+export const { reset } = authSlice.actions;
 export default authSlice.reducer;
