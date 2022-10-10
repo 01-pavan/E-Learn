@@ -40,7 +40,7 @@
 
 - User can upload a course.
   ![App Screenshot](./Images/publishpage.png)
-  # [Live Demo🎉🎉](http://social2.mernbook.com/ "MERN Social")
+  # [Live Demo🎉🎉]()
   ### working on deploying the application (will update the live demo)
   ---
 #### What you need to run this code
